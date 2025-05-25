@@ -1,0 +1,57 @@
+.input-card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.input-card.light {
+  background-color: #ffffff;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.input-card.dark {
+  background-color: #1e1e1e;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+}
+
+.input-card h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: inherit;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.upload-btn.light {
+  background-color: #4a6fa5;
+  color: white;
+}
+
+.upload-btn.dark {
+  background-color: #5d8ac9;
+  color: white;
+}
+
+.upload-btn.light:hover {
+  background-color: #3a5a80;
+}
+
+.upload-btn.dark:hover {
+  background-color: #4a7bbd;
+}
+
+.image-preview {
+  margin-top: 1rem;
+}
+
+.image-preview img {
+  max-width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
