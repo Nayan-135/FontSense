@@ -19,8 +19,8 @@
 }
 
 .input-grid {
-  display: grid;
-  gap: 32px;
+  display: flex;
+  justify-content: center;
   margin-bottom: 48px;
 }
 
@@ -40,10 +40,4 @@
 
 .app:not(.dark) .section-title {
   color: #111827;
-}
-
-@media (min-width: 1024px) {
-  .input-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }

@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AlertCircle, Sparkles, Copy, Download, Star, TrendingUp, Zap } from 'lucide-react';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import './Results.css';
 
-const Result = ({ isDarkMode, result, hasInput }) => {
+const Result = ({ isDarkMode, result, hasInput, uploadedImage }) => {
   const [animateIn, setAnimateIn] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const resultsRef = useRef(null);
 
   useEffect(() => {
     if (hasInput) {
@@ -16,6 +20,112 @@ const Result = ({ isDarkMode, result, hasInput }) => {
     navigator.clipboard.writeText(text);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const generatePDF = async () => {
+    if (!window.confirm('Do you want to download the results as PDF?')) {
+      return;
+    }
+
+    setIsGeneratingPDF(true);
+    
+    try {
+      const doc = new jsPDF('p', 'pt', 'a4');
+      const margin = 40;
+      let yPosition = margin;
+
+      // Add title and metadata
+      doc.setProperties({
+        title: 'Font Analysis Report',
+        creator: 'Font Finder AI'
+      });
+
+      // Add title
+      doc.setFontSize(20);
+      doc.setTextColor(40);
+      doc.text('Font Analysis Report', margin, yPosition);
+      yPosition += 30;
+
+      // Add date
+      doc.setFontSize(12);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, margin, yPosition);
+      yPosition += 30;
+
+      // Add uploaded image if available
+      if (uploadedImage) {
+        doc.setFontSize(12);
+        doc.text('Uploaded Image:', margin, yPosition);
+        yPosition += 20;
+
+        const imgProps = await addImageToPDF(doc, uploadedImage, margin, yPosition, 200);
+        yPosition += imgProps.height + 30;
+      }
+
+      // Add input text
+      doc.setFontSize(14);
+      doc.text('Detected Text:', margin, yPosition);
+      yPosition += 20;
+      
+      doc.setFontSize(12);
+      const splitText = doc.splitTextToSize(result || 'No text detected', doc.internal.pageSize.width - margin * 2);
+      doc.text(splitText, margin, yPosition);
+      yPosition += splitText.length * 15 + 30;
+
+      // Add font matches section
+      doc.setFontSize(16);
+      doc.text('Font Matches:', margin, yPosition);
+      yPosition += 30;
+
+      // Create a canvas of the matches section
+      const matchesElement = document.querySelector('.matches-grid');
+      if (matchesElement) {
+        const canvas = await html2canvas(matchesElement, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          logging: false,
+          backgroundColor: isDarkMode ? '#1a1a1a' : '#ffffff'
+        });
+        
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = doc.internal.pageSize.width - margin * 2;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        // Add new page if needed
+        if (yPosition + imgHeight > doc.internal.pageSize.height - margin) {
+          doc.addPage();
+          yPosition = margin;
+        }
+        
+        doc.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+      }
+
+      doc.save('font-analysis-report.pdf');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
+  const addImageToPDF = async (doc, imageSrc, x, y, maxWidth) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = imageSrc;
+      img.onload = () => {
+        const ratio = maxWidth / img.width;
+        const height = img.height * ratio;
+        doc.addImage(img, 'JPEG', x, y, maxWidth, height);
+        resolve({ width: maxWidth, height });
+      };
+      img.onerror = () => {
+        console.error('Failed to load image for PDF');
+        doc.text('Failed to load uploaded image', x, y);
+        resolve({ width: 0, height: 0 });
+      };
+    });
   };
 
   const mockFontMatches = [
@@ -79,7 +189,10 @@ const Result = ({ isDarkMode, result, hasInput }) => {
   }
 
   return (
-    <div className={`results-container ${isDarkMode ? 'dark' : ''} ${animateIn ? 'animate-in' : ''}`}>
+    <div 
+      className={`results-container ${isDarkMode ? 'dark' : ''} ${animateIn ? 'animate-in' : ''}`}
+      ref={resultsRef}
+    >
       <div className="results-header">
         <div className="title-section">
           <Sparkles className="results-icon" />
@@ -89,8 +202,19 @@ const Result = ({ isDarkMode, result, hasInput }) => {
           </div>
         </div>
         <div className="results-actions">
-          <button className="action-btn download">
-            <Download size={16} />
+          <button 
+            className={`action-btn download ${isGeneratingPDF ? 'loading' : ''}`}
+            onClick={generatePDF}
+            disabled={isGeneratingPDF}
+          >
+            {isGeneratingPDF ? (
+              'Generating...'
+            ) : (
+              <>
+                <Download size={16} />
+                <span>Download PDF</span>
+              </>
+            )}
           </button>
         </div>
       </div>
