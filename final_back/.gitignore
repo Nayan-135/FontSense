@@ -1,0 +1,31 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+
+# Virtual environment
+venv/
+env/
+ENV/
+*.env
+
+# Uploads and temporary files
+static/uploads/
+*.tmp
+*.log
+
+# Model files (optional: if too large)
+*.h5
+*.keras
+*.pb
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
