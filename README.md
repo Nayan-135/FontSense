@@ -26,85 +26,43 @@ fontsense/
 └── vite.config.js # Vite configuration
 
 
-## Installation
+---
 
-### Back (Flask API) Setup
+## 🛠️ Installation Guide
 
-1. Navigate to back directory:
-   ```bash
-   cd back
-Create and activate virtual environment:
+### 📌 Backend (Flask API)
 
-bash
+```bash
+# Navigate to backend
+cd back
+
+# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-Install dependencies:
 
-bash
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+# On Mac/Linux:
+source venv/bin/activate
+
+# Install Python dependencies
 pip install -r requirements.txt
-Start the Flask server:
 
-bash
+# Run the Flask server
 python app.py
-API will run on http://localhost:5000
 
-Frontend1 (React App) Setup
-Navigate to Frontend1 directory:
+📍 The Flask API will be available at: http://localhost:5000
 
+🎨 Frontend (React App)
 bash
+# Navigate to frontend
 cd ../Frontend1
-Install dependencies:
 
-bash
+# Install frontend dependencies
 npm install
-Start development server:
 
-bash
+# Start the development server
 npm run dev
-App will run on http://localhost:3000
+📍 The React app will be available at: http://localhost:3000
 
-API Documentation
-Endpoint: POST /api/predict
-
-Request:
-
-Content-Type: multipart/form-data
-
-Body: file (image file)
-
-Response:
-
-json
-{
-  "predictions": [
-    {"font": "Cooper Black", "confidence": 0.95},
-    {"font": "Bauhaus 93", "confidence": 0.03}
-  ]
-}
-Supported Fonts
-The system recognizes 20 font classes including:
-
-Cooper Black
-
-Arial Rounded MT Bold
-
-Bauhaus 93
-
-Rockwell
-
-Old English Text MT
-(Full list in back/final_labels.txt)
-
-Deployment
-Back Deployment
-bash
-# Production server:
-gunicorn -w 4 -b :5000 app:app
-
-# Docker:
-docker build -t fontsense-back .
-docker run -p 5000:5000 fontsense-back
-Frontend1 Deployment
-bash
-npm run build  # Deploy /dist folder
 
