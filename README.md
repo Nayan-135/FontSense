@@ -1,64 +1,110 @@
-FontSense - AI Font Recognition System /n
-System Architecture/n
-text/n
-fontsense/n
-├── **back/**               # Flask API Server\n
-│   ├── app.py\n
-│   ├── model_utils.py\n
-│   ├── Extrafinal.pth\n
-│   ├── final_labels.txt\n
-│   ├── requirements.txt\n
-│   └── uploads/\n
-│\n
-└── **Frontend1/**          # React Application\n
-    ├── public/\n
-    ├── src/\n
-    │   ├── components/\n
-    │   ├── styles/\n
-    │   ├── App.jsx\n
-    │   └── main.jsx\n
-    ├── package.json\n
-    └── vite.config.js\n
-Installation Instructions\n
-Back Setup (Flask API)\n
-bash\n
-cd back\n
-python -m venv venv\n
-source venv/bin/activate  # Windows: venv\Scripts\activate\n
-pip install -r requirements.txt\n
-python app.py\n
-Runs on http://localhost:5000\n
-\n
-Frontend1 Setup (React App)\n
-bash\n
-cd ../Frontend1\n
-npm install\n
-npm run dev\n
-Runs on http://localhost:3000\n
-\n
-Key Changes from Original:\n
-All references to backend folder changed to back\n
+# FontSense - AI Font Recognition System
 
-All references to frontend folder changed to Frontend1\n
+![FontSense Logo](https://via.placeholder.com/150) *(Replace with actual logo if available)*
 
-Maintained case sensitivity (note Frontend1 with capital F)\n
+A full-stack application that identifies fonts from images using deep learning, with a Flask API server and React frontend.
 
-Updated all path references in documentation\n
+## Project Structure
 
-Preserved all functionality while adapting folder names\n
+fontsense/
+├── back/ # Flask API Server
+│ ├── app.py # Main application
+│ ├── model_utils.py # Model inference logic
+│ ├── Extrafinal.pth # Pretrained model weights
+│ ├── final_labels.txt # Supported font classes
+│ ├── requirements.txt # Python dependencies
+│ └── uploads/ # Temporary image storage
+│
+└── Frontend1/ # React Application
+├── public/ # Static assets
+├── src/ # Source files
+│ ├── components/ # React components
+│ ├── styles/ # CSS files
+│ ├── App.jsx # Main application
+│ └── main.jsx # Entry point
+├── package.json # Frontend dependencies
+└── vite.config.js # Vite configuration
 
-Deployment Notes\n
-When deploying:\n
 
-Update any CI/CD pipelines to reference new folder names\n
+## Installation
 
-Ensure Dockerfiles/build scripts use correct paths\n
+### Back (Flask API) Setup
 
-Verify frontend API calls point to correct backend URL\n
+1. Navigate to back directory:
+   ```bash
+   cd back
+Create and activate virtual environment:
 
-The system maintains all original features despite folder name changes:\n
-✅ Full font recognition capabilities\n
-✅ Image upload processing\n
-✅ Camera capture functionality\n
-✅ Dark/light mode theming\n
-\n
+bash
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+Install dependencies:
+
+bash
+pip install -r requirements.txt
+Start the Flask server:
+
+bash
+python app.py
+API will run on http://localhost:5000
+
+Frontend1 (React App) Setup
+Navigate to Frontend1 directory:
+
+bash
+cd ../Frontend1
+Install dependencies:
+
+bash
+npm install
+Start development server:
+
+bash
+npm run dev
+App will run on http://localhost:3000
+
+API Documentation
+Endpoint: POST /api/predict
+
+Request:
+
+Content-Type: multipart/form-data
+
+Body: file (image file)
+
+Response:
+
+json
+{
+  "predictions": [
+    {"font": "Cooper Black", "confidence": 0.95},
+    {"font": "Bauhaus 93", "confidence": 0.03}
+  ]
+}
+Supported Fonts
+The system recognizes 20 font classes including:
+
+Cooper Black
+
+Arial Rounded MT Bold
+
+Bauhaus 93
+
+Rockwell
+
+Old English Text MT
+(Full list in back/final_labels.txt)
+
+Deployment
+Back Deployment
+bash
+# Production server:
+gunicorn -w 4 -b :5000 app:app
+
+# Docker:
+docker build -t fontsense-back .
+docker run -p 5000:5000 fontsense-back
+Frontend1 Deployment
+bash
+npm run build  # Deploy /dist folder
+
