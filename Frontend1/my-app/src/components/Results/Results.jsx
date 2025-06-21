@@ -34,7 +34,7 @@ const Result = ({ isDarkMode, predictions, hasInput, uploadedImage }) => {
     return predictions.map(([label, confidence], index) => ({
       name: label,
       confidence: (confidence * 100).toFixed(0),
-      category: 'Detected', // You might want to add actual categories from your backend
+      category: 'Detected',
       popularity: confidence > 0.9 ? 'Very High' : 
                  confidence > 0.7 ? 'High' : 
                  confidence > 0.5 ? 'Medium' : 'Low',
@@ -77,6 +77,7 @@ const Result = ({ isDarkMode, predictions, hasInput, uploadedImage }) => {
   }
 
   const fontMatches = formatPredictions();
+  const topMatchConfidence = fontMatches.length > 0 ? parseFloat(fontMatches[0].confidence) : 0;
 
   return (
     <div 
@@ -111,8 +112,26 @@ const Result = ({ isDarkMode, predictions, hasInput, uploadedImage }) => {
       
       {fontMatches.length > 0 ? (
         <div className="matches-section">
+          {topMatchConfidence < 90 ? (
+            <div className="low-confidence-warning">
+              <div className="warning-content">
+                <AlertCircle className="warning-icon" />
+                <div>
+                  <h4 className="warning-title">Exact Font Not Found in Dataset</h4>
+                  <p className="warning-message">
+                    The system couldn't find an exact match in our database. 
+                    Try uploading a clearer image with better text boundaries, 
+                    or check the closest matches below.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : null}
+          
           <div className="section-header">
-            <h4 className="section-title">Font Matches</h4>
+            <h4 className="section-title">
+              {topMatchConfidence < 90 ? 'Closest Font Matches' : 'Font Matches'}
+            </h4>
             <div className="match-count">{fontMatches.length} matches found</div>
           </div>
           
