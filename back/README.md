@@ -19,8 +19,9 @@ A Flask-based web API that classifies fonts in uploaded images using a PyTorch d
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/font-classifier.git
+   git clone https://github.com/Nayan-135/font-classifier.git
    cd font-classifier
+   cd back
 
 
    python -m venv venv
