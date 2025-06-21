@@ -1,6 +1,6 @@
-FontSense - AI Font Recognition System \n
-System Architecture\n
-text\n
+FontSense - AI Font Recognition System /n
+System Architecture/n
+text/n
 fontsense/n
 ├── **back/**               # Flask API Server\n
 │   ├── app.py\n
