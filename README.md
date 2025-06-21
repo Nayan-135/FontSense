@@ -4,26 +4,6 @@
 
 A full-stack application that identifies fonts from images using deep learning, with a Flask API server and React frontend.
 
-## Project Structure
-
-fontsense/
-├── back/ # Flask API Server
-│ ├── app.py # Main application
-│ ├── model_utils.py # Model inference logic
-│ ├── Extrafinal.pth # Pretrained model weights
-│ ├── final_labels.txt # Supported font classes
-│ ├── requirements.txt # Python dependencies
-│ └── uploads/ # Temporary image storage
-│
-└── Frontend1/ # React Application
-├── public/ # Static assets
-├── src/ # Source files
-│ ├── components/ # React components
-│ ├── styles/ # CSS files
-│ ├── App.jsx # Main application
-│ └── main.jsx # Entry point
-├── package.json # Frontend dependencies
-└── vite.config.js # Vite configuration
 
 
 ---
